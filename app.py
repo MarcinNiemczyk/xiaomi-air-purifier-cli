@@ -52,5 +52,25 @@ def read_status():
     """
     print(info)
 
+
+@app.command('on')
+def turn_on():
+    """Turn on a device."""
+    if not device:
+        print('Use config --set to add device.')
+        return
+    device.on()
+    print('Device is now ON.')
+
+
+@app.command('off')
+def turn_on():
+    """Turn off a device."""
+    if not device:
+        print('Use config --set to add device.')
+        return
+    device.off()
+    print('Device is now OFF.')
+
 if __name__ == '__main__':
     app()
