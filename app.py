@@ -1,7 +1,7 @@
 import typer
 from typing import Tuple
 from miio import AirPurifierMiot
-from miio.integrations.airpurifier.zhimi.airpurifier_miot import OperationMode
+from miio.integrations.airpurifier.zhimi.airpurifier_miot import OperationMode, LedBrightness
 from config import load_config, save_config
 from device import load_device
 
@@ -49,7 +49,7 @@ def read_status():
     Mode: {status.mode.name}
     Motor Speed: {status.motor_speed}
     Fan Level: {status.fan_level}
-    Favorite: {status.favorite_rpm}rpm
+    Favorite speed: {status.favorite_rpm}rpm
     Filter life: {status.filter_life_remaining}%
     """
     print(info)
@@ -113,6 +113,22 @@ def set_favorite(rpm: int = typer.Argument(None, help='RPM must be between 300 a
         return
     device.set_favorite_rpm(rpm)
     print(f'Device favorite rpm is now: {rpm}.')
+
+
+@app.command('day')
+def set_day_mode():
+    """Set device to day mode."""
+    device.set_mode(OperationMode(0))
+    device.set_led_brightness(LedBrightness(0))
+    print('Day mode is now active.')
+
+
+@app.command('night')
+def set_night_mode():
+    """Set device to night mode."""
+    device.set_mode(OperationMode(1))
+    device.set_led_brightness(LedBrightness(2))
+    print('Night mode is now active.')
 
 
 if __name__ == '__main__':
