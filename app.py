@@ -77,6 +77,9 @@ def turn_on():
 @app.command('mode')
 def set_mode(mode: int = typer.Argument(None, help='Auto = 0 Silent = 1 Favorite = 2 Fan = 3')):
     """Set device mode."""
+    if mode is None:
+        print('Available modes: Auto = 0 Silent = 1 Favorite = 2 Fan = 3')
+        return
     if mode < 0 or mode > 3:
         print('Available modes: Auto = 0 Silent = 1 Favorite = 2 Fan = 3')
         return
@@ -84,6 +87,18 @@ def set_mode(mode: int = typer.Argument(None, help='Auto = 0 Silent = 1 Favorite
     device.set_mode(mode)
     print(f'Device mode is now: {mode.name}.')
 
+
+@app.command('level')
+def set_level(level: int = typer.Argument(None, help='Set device fan level speed (1-3).')):
+    """Set device fan level speed."""
+    if level is None:
+        print('Available fan speed levels: 1-3')
+        return
+    if level < 1 or level > 3:
+        print('Available fan speed levels: 1-3')
+        return
+    device.set_fan_level(level)
+    print(f'Device fan speed level is now: {level}.')
 
 if __name__ == '__main__':
     app()
