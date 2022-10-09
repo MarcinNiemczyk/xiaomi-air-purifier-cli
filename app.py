@@ -49,6 +49,7 @@ def read_status():
     Mode: {status.mode.name}
     Motor Speed: {status.motor_speed}
     Fan Level: {status.fan_level}
+    Favorite: {status.favorite_rpm}rpm
     Filter life: {status.filter_life_remaining}%
     """
     print(info)
@@ -99,6 +100,20 @@ def set_level(level: int = typer.Argument(None, help='Set device fan level speed
         return
     device.set_fan_level(level)
     print(f'Device fan speed level is now: {level}.')
+
+
+@app.command('favorite')
+def set_favorite(rpm: int = typer.Argument(None, help='RPM must be between 300 and 2200 and divisible by 10')):
+    """Set favorite motor speed (rpm)."""
+    if rpm is None:
+        print('RPM must be between 300 and 2200 and divisible by 10')
+        return
+    if rpm < 300 or rpm > 2200 or rpm % 10 != 0:
+        print('RPM must be between 300 and 2200 and divisible by 10')
+        return
+    device.set_favorite_rpm(rpm)
+    print(f'Device favorite rpm is now: {rpm}.')
+
 
 if __name__ == '__main__':
     app()
