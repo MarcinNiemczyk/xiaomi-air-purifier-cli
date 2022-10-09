@@ -131,5 +131,19 @@ def set_night_mode():
     print('Night mode is now active.')
 
 
+@app.command('led')
+def set_led_brightness(level: int = typer.Argument(None, help='Bright = 0 Dim = 1 Off = 2')):
+    """Set led brightness."""
+    if level is None:
+        print('Available brightness levels: Bright = 0 Dim = 1 Off = 2')
+        return
+    if level < 0 or level > 2:
+        print('Available brightness levels: Bright = 0 Dim = 1 Off = 2')
+        return
+    level = LedBrightness(level)
+    device.set_led_brightness(level)
+    print(f'Device brightness is now: {level.name}.')
+
+
 if __name__ == '__main__':
     app()
