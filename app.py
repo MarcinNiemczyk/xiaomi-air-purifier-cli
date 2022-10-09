@@ -1,6 +1,7 @@
 import typer
 from typing import Tuple
 from miio import AirPurifierMiot
+from miio.integrations.airpurifier.zhimi.airpurifier_miot import OperationMode
 from config import load_config, save_config
 from device import load_device
 
@@ -45,7 +46,7 @@ def read_status():
     PM2.5: {status.aqi}
     Temperature: {status.temperature} °C
     Humidity: {status.humidity}%
-    Mode: {status.mode}
+    Mode: {status.mode.name}
     Motor Speed: {status.motor_speed}
     Fan Level: {status.fan_level}
     Filter life: {status.filter_life_remaining}%
@@ -71,6 +72,18 @@ def turn_on():
         return
     device.off()
     print('Device is now OFF.')
+
+
+@app.command('mode')
+def set_mode(mode: int = typer.Argument(None, help='Auto = 0 Silent = 1 Favorite = 2 Fan = 3')):
+    """Set device mode."""
+    if mode < 0 or mode > 3:
+        print('Available modes: Auto = 0 Silent = 1 Favorite = 2 Fan = 3')
+        return
+    mode = OperationMode(mode)
+    device.set_mode(mode)
+    print(f'Device mode is now: {mode.name}.')
+
 
 if __name__ == '__main__':
     app()
